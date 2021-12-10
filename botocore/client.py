@@ -388,6 +388,8 @@ class ClientCreator(object):
                 raise TypeError(
                     "%s() only accepts keyword arguments." % py_operation_name)
             # The "self" in this scope is referring to the BaseClient.
+            print('MAKING API CALL', operation_name)
+            print('MAKING API CALL', kwargs)
             return self._make_api_call(operation_name, kwargs)
 
         _api_call.__name__ = str(py_operation_name)
@@ -698,12 +700,16 @@ class BaseClient(object):
                 operation_name=operation_name),
             model=operation_model, params=request_dict,
             request_signer=self._request_signer, context=request_context)
-
+        print('WE HAVE EVENT_RESPONSE, opname', operation_name)
+        print('WE HAVE EVENT_RESPONSE, api parans', api_params)
+        print('WE HAVE EVENT_RESPONSE', event_response)
         if event_response is not None:
             http, parsed_response = event_response
         else:
             http, parsed_response = self._make_request(
                 operation_model, request_dict, request_context)
+        print('WE HAVE parsed', http)
+        print('WE HAVE parsed', parsed_response)
 
         self.meta.events.emit(
             'after-call.{service_id}.{operation_name}'.format(
