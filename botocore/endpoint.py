@@ -128,11 +128,16 @@ class Endpoint(object):
         return request.prepare()
 
     def _send_request(self, request_dict, operation_model):
+        print('WE IN SEND REQUEST, opmodel', operation_model)
+        print('WE IN SEND REQUEST, reqdict', request_dict)
         attempts = 1
         request = self.create_request(request_dict, operation_model)
+        print('WE IN SEND REQUEST, req', request)
         context = request_dict['context']
         success_response, exception = self._get_response(
             request, operation_model, context)
+        print('WE IN SEND REQUEST, success', success_response)
+        print('WE IN SEND REQUEST, exception', exception)
         while self._needs_retry(attempts, operation_model, request_dict,
                                 success_response, exception):
             attempts += 1
@@ -146,6 +151,8 @@ class Endpoint(object):
                 request_dict, operation_model)
             success_response, exception = self._get_response(
                 request, operation_model, context)
+        print('AFTER LOOK, success', success_response)
+        print('AFTER LOOK, exception', exception)
         if success_response is not None and \
                 'ResponseMetadata' in success_response[1]:
             # We want to share num retries, not num attempts.
